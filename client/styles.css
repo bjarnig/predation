@@ -81,6 +81,21 @@ button.primary {
   font-weight: 600;
 }
 
+/* Model-specific buttons */
+#deviate, #converge, #addPattern, #toggleNetwork, #toggleWaves {
+  background: var(--accent);
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+#deviate:hover, #converge:hover, #addPattern:hover, #toggleNetwork:hover, #toggleWaves:hover {
+  background: var(--accent);
+  opacity: 0.8;
+  transform: translateY(-1px);
+}
+
 /* ===== GRID COLUMNS ===== */
 .col-2 { grid-column: span 2; }
 .col-3 { grid-column: span 3; }

@@ -54,19 +54,81 @@ function setupEventListeners() {
   
   $("#deviate").onclick = () => {
     if (modelSelect.value === 'lotka') {
-      // Add random perturbation to populations
-      lotkaModel.X += Math.floor(Math.random() * 20 - 10);
-      lotkaModel.Y += Math.floor(Math.random() * 20 - 10);
+      // Create dramatic population shifts
+      const deviationType = Math.random();
+      
+      if (deviationType < 0.3) {
+        // Prey explosion (sudden increase)
+        lotkaModel.X = Math.floor(lotkaModel.X * (2 + Math.random() * 2));
+        lotkaModel.Y = Math.floor(lotkaModel.Y * (0.5 + Math.random() * 0.5));
+        console.log("Prey explosion triggered!");
+      } else if (deviationType < 0.6) {
+        // Predator surge (sudden increase)
+        lotkaModel.Y = Math.floor(lotkaModel.Y * (2 + Math.random() * 2));
+        lotkaModel.X = Math.floor(lotkaModel.X * (0.5 + Math.random() * 0.5));
+        console.log("Predator surge triggered!");
+      } else if (deviationType < 0.8) {
+        // Random perturbation to both populations
+        lotkaModel.X += Math.floor((Math.random() - 0.5) * 40);
+        lotkaModel.Y += Math.floor((Math.random() - 0.5) * 20);
+        console.log("Random perturbation applied!");
+      } else {
+        // Parameter mutation (temporarily change rates)
+        lotkaModel.a *= (0.5 + Math.random());
+        lotkaModel.b *= (0.5 + Math.random());
+        lotkaModel.c *= (0.5 + Math.random());
+        console.log("Parameter mutation applied!");
+      }
+      
+      // Ensure populations stay positive
       lotkaModel.X = Math.max(1, lotkaModel.X);
       lotkaModel.Y = Math.max(1, lotkaModel.Y);
+      
+      // Update UI sliders to reflect changes
+      $("#lvX").value = lotkaModel.X;
+      $("#lvX-val").textContent = lotkaModel.X;
+      $("#lvY").value = lotkaModel.Y;
+      $("#lvY-val").textContent = lotkaModel.Y;
+      $("#lvA").value = lotkaModel.a;
+      $("#lvA-val").textContent = lotkaModel.a.toFixed(2);
+      $("#lvB").value = lotkaModel.b;
+      $("#lvB-val").textContent = lotkaModel.b.toFixed(3);
+      $("#lvC").value = lotkaModel.c;
+      $("#lvC-val").textContent = lotkaModel.c.toFixed(2);
     }
   };
   
   $("#converge").onclick = () => {
     if (modelSelect.value === 'lotka') {
-      // Reset to equilibrium values
-      lotkaModel.X = Math.floor(lotkaModel.c / lotkaModel.b);
-      lotkaModel.Y = Math.floor(lotkaModel.a / lotkaModel.b);
+      // Calculate theoretical equilibrium
+      const equilibriumX = lotkaModel.c / lotkaModel.b;
+      const equilibriumY = lotkaModel.a / lotkaModel.b;
+      
+      // Smooth convergence to equilibrium
+      lotkaModel.X = Math.floor(equilibriumX);
+      lotkaModel.Y = Math.floor(equilibriumY);
+      
+      // Reset parameters to stable values
+      lotkaModel.a = 0.8;
+      lotkaModel.b = 0.015;
+      lotkaModel.c = 0.6;
+      lotkaModel.tScale = 1.0;
+      
+      console.log(`Converging to equilibrium: X=${equilibriumX.toFixed(1)}, Y=${equilibriumY.toFixed(1)}`);
+      
+      // Update UI sliders to reflect changes
+      $("#lvX").value = lotkaModel.X;
+      $("#lvX-val").textContent = lotkaModel.X;
+      $("#lvY").value = lotkaModel.Y;
+      $("#lvY-val").textContent = lotkaModel.Y;
+      $("#lvA").value = lotkaModel.a;
+      $("#lvA-val").textContent = lotkaModel.a.toFixed(2);
+      $("#lvB").value = lotkaModel.b;
+      $("#lvB-val").textContent = lotkaModel.b.toFixed(3);
+      $("#lvC").value = lotkaModel.c;
+      $("#lvC-val").textContent = lotkaModel.c.toFixed(2);
+      $("#lvS").value = lotkaModel.tScale;
+      $("#lvS-val").textContent = lotkaModel.tScale.toFixed(1);
     }
   };
   
@@ -190,6 +252,11 @@ function showControls() {
   document.querySelectorAll('.rd').forEach(el => el.style.display = isReaction ? 'block' : 'none');
   document.querySelectorAll('.ku').forEach(el => el.style.display = isKuramoto ? 'block' : 'none');
   document.querySelectorAll('.lv').forEach(el => el.style.display = isLotka ? 'block' : 'none');
+  
+  // Show/hide model-specific buttons
+  document.querySelectorAll('#deviate, #converge').forEach(el => el.style.display = isLotka ? 'inline-block' : 'none');
+  document.querySelectorAll('#addPattern').forEach(el => el.style.display = isReaction ? 'inline-block' : 'none');
+  document.querySelectorAll('#toggleNetwork, #toggleWaves').forEach(el => el.style.display = isKuramoto ? 'inline-block' : 'none');
 }
 
 // ===== MAIN RENDER LOOP =====
