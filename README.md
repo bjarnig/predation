@@ -1,4 +1,4 @@
-# 🐺 Predation
+# Predation
 
 A real-time visualization and sonification system for dynamic systems, featuring predator-prey dynamics, reaction-diffusion patterns, and coupled oscillators. Events are streamed via OSC to SuperCollider for real-time audio synthesis.
 
@@ -8,18 +8,18 @@ A real-time visualization and sonification system for dynamic systems, featuring
 ![OSC Bridge](https://img.shields.io/badge/Protocol-OSC-green)
 ![p5.js](https://img.shields.io/badge/Framework-p5.js-red)
 
-## ✨ Features
+## Features
 
 - **Three Dynamic Systems**:
-  - 🐰 **Lotka-Volterra**: Predator-prey dynamics with Gillespie SSA
-  - 🌊 **Reaction-Diffusion**: Gray-Scott pattern formation
-  - 🎵 **Kuramoto Oscillators**: Network synchronization dynamics
+  - **Lotka-Volterra**: Predator-prey dynamics with Gillespie SSA
+  - **Reaction-Diffusion**: Gray-Scott pattern formation
+  - **Kuramoto Oscillators**: Network synchronization dynamics
 - **Real-time Visualization**: Phase space plots, time series, and heatmaps
 - **OSC Integration**: Stream events to SuperCollider for audio synthesis
 - **Interactive Controls**: Adjust parameters in real-time
 - **Modular Architecture**: Clean separation of concerns
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 ├── client/                 # Frontend (p5.js + WebSocket OSC)
@@ -39,7 +39,7 @@ A real-time visualization and sonification system for dynamic systems, featuring
 └── README.md             # This file
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Start the OSC Bridge Server
 
@@ -51,11 +51,11 @@ node osc-bridge.js
 
 You should see:
 ```
-🌉 OSC Bridge Server Running
-📱 WebSocket: ws://localhost:8081 (for browser)
-🎵 UDP: localhost:57120 (to SuperCollider)
-👂 Listening on: localhost:57121 (from SuperCollider)
-✅ UDP port ready
+OSC Bridge Server Running
+WebSocket: ws://localhost:8081 (for browser)
+UDP: localhost:57120 (to SuperCollider)
+Listening on: localhost:57121 (from SuperCollider)
+UDP port ready
 ```
 
 ### 2. Open the Client
@@ -66,7 +66,7 @@ Open `client/index.html` in your web browser and click **"Connect OSC"**.
 
 Load `docs/lotka-osc-receiver.scd` in SuperCollider to receive and print OSC events.
 
-## 🎮 Usage
+## Usage
 
 ### Controls
 
@@ -77,7 +77,7 @@ Load `docs/lotka-osc-receiver.scd` in SuperCollider to receive and print OSC eve
 
 ### Models
 
-#### 🐰 Lotka-Volterra (Predator-Prey)
+#### Lotka-Volterra (Predator-Prey)
 - **X**: Prey population
 - **Y**: Predator population  
 - **a**: Prey birth rate
@@ -85,21 +85,21 @@ Load `docs/lotka-osc-receiver.scd` in SuperCollider to receive and print OSC eve
 - **c**: Predator death rate
 - **Time Scale**: Simulation speed multiplier
 
-#### 🌊 Reaction-Diffusion (Gray-Scott)
+#### Reaction-Diffusion (Gray-Scott)
 - **f**: Feed rate
 - **k**: Kill rate
 - **dA**: Diffusion rate A
 - **dB**: Diffusion rate B
 - **Scale**: Visualization scale
 
-#### 🎵 Kuramoto Oscillators
+#### Kuramoto Oscillators
 - **Coupling Strength**: Network coupling intensity
 - **Freq Range**: Natural frequency distribution
 - **Noise**: Random perturbation strength
 - **Network Radius**: Connection distance
 - **Oscillators**: Number of oscillators
 
-## 📡 OSC Protocol
+## OSC Protocol
 
 Events are sent to `/event` with the following formats:
 
@@ -130,7 +130,7 @@ Events are sent to `/event` with the following formats:
 - `coupling`: Coupling strength parameter
 - `freqRange`: Natural frequency range
 
-## 🛠️ Development
+## Development
 
 ### Architecture
 
@@ -160,7 +160,7 @@ The project uses a modular architecture:
 - osc
 - ws
 
-## 🎵 SuperCollider Integration
+## SuperCollider Integration
 
 The system sends throttled OSC events (every 4th event) to prevent overwhelming SuperCollider. Example usage:
 
@@ -176,7 +176,7 @@ OSCFunc({ |msg|
 }, '/event');
 ```
 
-## 📊 Visualization
+## Visualization
 
 ### Lotka-Volterra
 - **Left Panel**: Phase space (X vs Y trajectory)
@@ -187,7 +187,7 @@ OSCFunc({ |msg|
 - **Heatmap**: Cell heights with color coding
 - **Avalanches**: Visualized as color changes
 
-## 🔧 Configuration
+## Configuration
 
 ### OSC Bridge
 - **WebSocket Port**: 8081 (configurable in `osc-bridge.js`)
@@ -197,18 +197,18 @@ OSCFunc({ |msg|
 - **Event Rate**: 1 in 4 events sent to OSC (configurable in `main.js`)
 - **Animation**: Full speed (60fps) regardless of throttling
 
-## 📝 License
+## License
 
 MIT License - feel free to use in your own projects!
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
 4. Submit a pull request
 
-## 📚 References
+## References
 
 - [Lotka-Volterra Equations](https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations)
 - [Gillespie Algorithm](https://en.wikipedia.org/wiki/Gillespie_algorithm)
@@ -218,4 +218,4 @@ MIT License - feel free to use in your own projects!
 
 ---
 
-**Built with ❤️ for the intersection of science, art, and sound**
+**Built for the intersection of science, art, and sound**
