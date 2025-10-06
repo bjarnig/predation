@@ -1,0 +1,34 @@
+{
+  "name": "predation",
+  "version": "1.0.0",
+  "description": "Real-time visualization and sonification of dynamic systems via OSC",
+  "main": "server/osc-bridge.js",
+  "scripts": {
+    "start": "cd server && node osc-bridge.js",
+    "install-deps": "cd server && npm install",
+    "dev": "cd server && node osc-bridge.js"
+  },
+  "keywords": [
+    "osc",
+    "simulation",
+    "predation",
+    "lotka-volterra",
+    "reaction-diffusion",
+    "kuramoto-oscillators",
+    "p5js",
+    "supercollider",
+    "sonification",
+    "visualization",
+    "dynamic-systems"
+  ],
+  "author": "bjarnig",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bjarnig/predation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bjarnig/predation/issues"
+  },
+  "homepage": "https://github.com/bjarnig/predation#readme"
+}

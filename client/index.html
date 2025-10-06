@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Predation</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- p5.js -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+  <!-- OSC for browser (Colin Clark) -->
+  <script src="https://cdn.jsdelivr.net/npm/osc/dist/osc-browser.min.js"></script>
+  <!-- External stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="ui">
+    <div id="panel">
+      <h3>Predation</h3>
+      <label class="col-2">Model
+        <select id="model">
+          <option value="lotka">Predator–Prey (Gillespie)</option>
+          <option value="reaction">Reaction-Diffusion (Gray-Scott)</option>
+          <option value="kuramoto">Kuramoto Oscillators</option>
+        </select>
+      </label>
+      <label class="col-2">WebSocket URL
+        <input id="wsurl" value="ws://localhost:8081" />
+      </label>
+      <div class="col-2" style="display:flex; gap:8px; align-items:center;">
+        <button id="connect" class="primary">Connect OSC</button>
+        <span id="status">disconnected</span>
+      </div>
+
+      <!-- Reaction-Diffusion controls -->
+      <label class="col-2 rd">Feed Rate (f): <span id="rdF-val">0.055</span>
+        <input id="rdF" type="range" min="0.01" max="0.1" step="0.001" value="0.055" />
+      </label>
+      <label class="col-2 rd">Kill Rate (k): <span id="rdK-val">0.062</span>
+        <input id="rdK" type="range" min="0.01" max="0.1" step="0.001" value="0.062" />
+      </label>
+      <label class="col-2 rd">Diffusion A: <span id="rdDA-val">1.0</span>
+        <input id="rdDA" type="range" min="0.1" max="2.0" step="0.1" value="1.0" />
+      </label>
+      <label class="col-2 rd">Diffusion B: <span id="rdDB-val">0.5</span>
+        <input id="rdDB" type="range" min="0.1" max="1.0" step="0.1" value="0.5" />
+      </label>
+      <label class="col-2 rd">Scale: <span id="rdScale-val">2</span>
+        <input id="rdScale" type="range" min="1" max="4" step="1" value="2" />
+      </label>
+
+      <!-- Kuramoto Oscillators controls -->
+      <label class="col-1 ku">Coupling: <span id="kuC-val">0.5</span>
+        <input id="kuC" type="range" min="0.0" max="2.0" step="0.1" value="0.5" />
+      </label>
+      <label class="col-1 ku">Freq: <span id="kuF-val">0.5</span>
+        <input id="kuF" type="range" min="0.1" max="2.0" step="0.1" value="0.5" />
+      </label>
+      <label class="col-1 ku">Noise: <span id="kuN-val">0.1</span>
+        <input id="kuN" type="range" min="0.0" max="1.0" step="0.05" value="0.1" />
+      </label>
+      <label class="col-1 ku">Radius: <span id="kuR-val">0.8</span>
+        <input id="kuR" type="range" min="0.2" max="1.5" step="0.1" value="0.8" />
+      </label>
+      <label class="col-1 ku">Count: <span id="kuO-val">200</span>
+        <input id="kuO" type="range" min="50" max="500" step="25" value="200" />
+      </label>
+
+      <!-- Lotka controls -->
+      <label class="col-2 lv">Prey X: <span id="lvX-val">60</span>
+        <input id="lvX" type="range" min="1" max="200" step="1" value="60" />
+      </label>
+      <label class="col-2 lv">Predators Y: <span id="lvY-val">25</span>
+        <input id="lvY" type="range" min="1" max="200" step="1" value="25" />
+      </label>
+      <label class="col-2 lv">a (prey birth): <span id="lvA-val">0.8</span>
+        <input id="lvA" type="range" min="0.05" max="2.0" step="0.05" value="0.8" />
+      </label>
+      <label class="col-2 lv">b (predation): <span id="lvB-val">0.015</span>
+        <input id="lvB" type="range" min="0.001" max="0.05" step="0.001" value="0.015" />
+      </label>
+      <label class="col-2 lv">c (predator death): <span id="lvC-val">0.6</span>
+        <input id="lvC" type="range" min="0.05" max="2.0" step="0.05" value="0.6" />
+      </label>
+      <label class="col-2 lv">Time Scale: <span id="lvS-val">1.0</span>
+        <input id="lvS" type="range" min="0.1" max="4.0" step="0.1" value="1.0" />
+      </label>
+
+      <div class="col-6" style="display:flex; gap:8px;">
+        <button id="start" class="primary">Start</button>
+        <button id="stop">Stop</button>
+        <button id="deviate">Deviate</button>
+        <button id="converge">Converge</button>
+        <button id="addPattern">Add Pattern</button>
+        <button id="toggleNetwork">Toggle Network</button>
+        <button id="toggleWaves">Toggle Waves</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="legend">
+    <b>OSC</b>: events go to <code>/event</code> with args per model.
+    <b>Lotka</b>: { model:"lotka", type:0|1|2, X:Int, Y:Int, a:Float, b:Float, c:Float }
+    <b>Reaction-Diffusion</b>: { model:"reaction", type:"pattern", activeRegions:Int, maxB:Float, avgB:Float, f:Float, k:Float }
+    <b>Kuramoto</b>: { model:"kuramoto", type:"sync|desync", orderParameter:Float, clusterCount:Int, coupling:Float, freqRange:Float }
+  </div>
+
+  <!-- Load modules in order -->
+  <script src="osc-client.js"></script>
+  <script src="reaction-diffusion.js"></script>
+  <script src="kuramoto-oscillators.js"></script>
+  <script src="lotka-volterra.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
